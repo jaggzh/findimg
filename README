@@ -1,0 +1,45 @@
+findimg.py
+jaggz.h is at gmail.com
+
+Keras w/Theano deep neural network to search your plethora of images
+for particular classes of images (like, those with smiles, or with objects
+in them).
+
+Features (aka problems!)
+  1. It uses a classification/categorization net, not an object recognition setup.
+  2. It uses a list of all your images (so you can prune it if you want).
+     See section "Starting:", below.
+  3. It caches 64x64 pixel versions of all your images in the cache/ folder.
+     The same folder is used for your global set of images, as well as your
+     cached 'thumbnails' for your training data, so it can get messy.
+     findimg.py has "indim = 64", which you can change.
+  4. The net convolves down several times, then uses a fully-connected layer.
+     This happens to allow more leniency with the convolutions, so you don't
+     need to be so precise with the dimensions of the conv2d outputs.
+  5. You do need to make some subdirs in imgdat/labeled/ (see below),
+     and throw a bunch of samples.  I have, for instance:
+       imgdat/labeled/wife-and-i
+       imgdat/labeled/wife-smiling
+       imgdat/labeled/ignore-me-im-false-positive
+  6. The global list of all non-labeled images is:
+     dat/globfiles.txt (Again, see Starting: 1. below)
+     It has thousands of entries like:
+       /home/me/photos/canon rebel/2017-02-12/DCIM/0001.jpg
+       /home/me/photos/canon rebel/2017-02-12/DCIM/0002.jpg
+       /home/me/photos/android phone/2017-02-25/Camera/dsc-00008.jpg
+       /home/me/photos/android phone/2017-02-25/Camera/dsc-00009.jpg
+       ...
+  7. The labeled dirs, being traversed (not a generated list.txt), uses
+     a pattern to search for files by extension.
+	 findimg.py has prog = re.compile('\.(jpg|gif|tif|tiff|png|bmp)$', re.IGNORECASE)
+
+Starting:
+1. Create global set of images:
+   You need to create dat/globfiles.txt
+   It's a list of all images in your global dataset
+   Ex: find /path/to/images -iname '*.jpg' > dat/globfiles.txt
+2. Make folders of special labeled categories:
+   Ex's: imgdat/labeled/dogs
+         imgdat/labeled/frontdoors
+   Labeled folders are traversed, of any depth, but just the main subdir
+   is used as the label.
